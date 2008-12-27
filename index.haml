@@ -13,29 +13,63 @@
         margin: 0
         position: absolute
   :javascript
-    function resize() {
-      $canvas.setStyle({
-        width: document.viewport.getWidth() + 'px',
-        height: document.viewport.getHeight() + 'px'
-      });
-    }
-    function tick() {
-      var ctx = $canvas.getContext('2d');
-      for (var i = 0; i < 6; i++){
-        for (var j = 0; j < 6; j++){
-          ctx.strokeStyle = 'rgb(0,' + Math.floor(255-42.5*i) + ',' + 
-                           Math.floor(255-42.5*j) + ')';
-          ctx.beginPath();
-          ctx.arc(12.5+j*25,12.5+i*25,10,0,Math.PI*2,true);
-          ctx.stroke();
-        }
+    var Star = Class.create({
+      initialize: function() {
+        this.x = 0;
+        this.y = 0;
+        this.velocity = 1;
+      },
+      draw: function(context) {
+        var opacity = this.velocity / 10;
+        context.fillStyle = "rgba(255,255,255," + opacity + ")";
+        context.fillRect(this.x, this.y, 2, 2);
+      }
+    });
+    var stars = $A();
+    for (var i = 0; i < 100; i++) stars.push(new Star());
+    
+    function randomizeStars() {
+      var width = document.viewport.getWidth(),
+          height = document.viewport.getHeight();
+      for (var i = 0; i < stars.size(); i++) {
+        var star = stars[i];
+        star.x = Math.floor(Math.random() * width);
+        star.y = Math.floor(Math.random() * height);
+        star.velocity = Math.floor(Math.random() * 10) + 1;
       }
     }
+    
+    function drawStars(context) {
+      for (var i = 0; i < stars.size(); i++) stars[i].draw(context);
+    }
+    
+    function animateStars() {
+      for (var i = 0; i < stars.size(); i++) {
+        var star = stars[i];
+        star.y = star.y + star.velocity;
+        if (star.y > $canvas.height) star.y = 0;
+      }
+    }
+    
+    function resize() {
+      $canvas.width = document.viewport.getWidth();
+      $canvas.height = document.viewport.getHeight();
+      randomizeStars();
+    }
+    
+    function tick() {
+      var context = $canvas.getContext('2d');
+      context.clearRect(0, 0, $canvas.width, $canvas.height);
+      animateStars();
+      drawStars(context)
+    }
+    
     Event.observe(window, 'resize', resize);
+    
     Event.observe(document, 'dom:loaded', function() {
       $canvas = $('canvas');
       resize();
-      tick();
+      setInterval('tick()', 1000/24);
     });
 
 %canvas#canvas
