@@ -1,6 +1,7 @@
 - @title = "Stealth Canvas Test"
 
 - content_for :meta do
+  %script{:type=>"text/javascript", :src=>"/javascripts/game.js"}
   %style{:type=>"text/css"}
     :sass
       body
@@ -8,61 +9,7 @@
         padding: 0
         overflow: hidden
       canvas
-        background: black
-        padding: 0
-        margin: 0
         position: absolute
-  :javascript
-    var stars = [];
-    for (var i = 0; i < 100; i++) stars.push(new Object());
-    
-    function randomizeStars() {
-      var width = document.viewport.getWidth() - 5,  // subtract the width of the star
-          height = document.viewport.getHeight() - 5;
-      for (var i = 0; i < stars.size(); i++) {
-        var star = stars[i];
-        star.x = Math.floor(Math.random() * width);
-        star.y = Math.floor(Math.random() * height);
-        star.velocity = Math.floor(Math.random() * 10) + 1;
-      }
-    }
-    
-    function drawStars(context) {
-      for (var i = 0; i < stars.size(); i++) {
-        var star = stars[i];
-        context.drawImage($starImage, (star.velocity - 1) * 5, 0, 5, 5, star.x, star.y, 5, 5);
-      }
-    }
-    
-    function animateStars() {
-      for (var i = 0; i < stars.size(); i++) {
-        var star = stars[i];
-        star.y = star.y + star.velocity;
-        if (star.y > $canvas.height) star.y = 0;
-      }
-    }
-    
-    function resize() {
-      $canvas.width = document.viewport.getWidth();
-      $canvas.height = document.viewport.getHeight();
-      randomizeStars();
-    }
-    
-    function tick() {
-      var context = $canvas.getContext('2d');
-      context.clearRect(0, 0, $canvas.width, $canvas.height);
-      animateStars();
-      drawStars(context);
-    }
-    
-    Event.observe(window, 'resize', resize);
-    
-    Event.observe(document, 'dom:loaded', function() {
-      $canvas = $('canvas');
-      $starImage = new Image();
-      $starImage.src = '/images/star.png'
-      resize();
-      setInterval('tick()', 1000 / 24); // 24 frames a second
-    });
+        margin: 0
 
 %canvas#canvas
