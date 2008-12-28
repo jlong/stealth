@@ -55,7 +55,6 @@ var LaserCollection = Class.create({
   
   add: function(laser) {
     this.collection.push(laser);
-    console.log(this.collection.size());
   },
   
   animate: function() {
