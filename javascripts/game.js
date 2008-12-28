@@ -50,11 +50,12 @@ var Laser = Class.create(Sprite, {
 
 var LaserCollection = Class.create({
   initialize: function() {
-    this.collection = [];
+    this.collection = $A([]);
   },
   
   add: function(laser) {
     this.collection.push(laser);
+    console.log(this.collection.size());
   },
   
   animate: function() {
@@ -62,6 +63,7 @@ var LaserCollection = Class.create({
       var laser = this.collection[i];
       laser.y = laser.y + laser.velocity;
     }
+    this.collection = this.collection.reject(function(laser) { return laser.y > 3000 || laser.y < -100 });
   },
   
   draw: function(context) {
@@ -84,11 +86,11 @@ var Game = Class.create({
   },
   
   addNewLasers: function() {
-    if (this.shootLasers) {
+    if (this.shootLasers && this.releaseLasers) {
       this.lasers.add(new Laser(this.ship.x - 34, this.ship.y + 20, -30));
       this.lasers.add(new Laser(this.ship.x + 33, this.ship.y + 20, -30));
-      this.shootLasers = false;
     }
+    this.releaseLasers = !this.releaseLasers;
   },
   
   animateLasers: function() {
@@ -153,6 +155,7 @@ var Game = Class.create({
     });
     this.canvas.observe('mousemove', this.onmousemove.bind(this));
     this.canvas.observe('mousedown', this.onmousedown.bind(this));
+    this.canvas.observe('mouseup', this.onmouseup.bind(this));
     this.context = canvas.getContext('2d');
   },
   
@@ -171,6 +174,11 @@ var Game = Class.create({
   
   onmousedown: function(event) {
     this.shootLasers = true;
+    this.releaseLasers = true;
+  },
+  
+  onmouseup: function(event) {
+    this.shootLasers = false;
   }
 });
 
