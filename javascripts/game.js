@@ -37,14 +37,62 @@ var Ship = Class.create(Sprite, {
   }
 });
 
+var Laser = Class.create(Sprite, {
+  initialize: function(x, y, velocity) {
+    this.setPosition(x, y);
+    this.velocity = velocity;
+  },
+  
+  draw: function(context) {
+    context.drawImage(Game.laserImage, this.x - 1, this.y - 10);
+  }
+});
+
+var LaserCollection = Class.create({
+  initialize: function() {
+    this.collection = [];
+  },
+  
+  add: function(laser) {
+    this.collection.push(laser);
+  },
+  
+  animate: function() {
+    for (var i = 0; i < this.collection.size(); i++) {
+      var laser = this.collection[i];
+      laser.y = laser.y + laser.velocity;
+    }
+  },
+  
+  draw: function(context) {
+    for (var i = 0; i < this.collection.size(); i++) {
+      var laser = this.collection[i];
+      laser.draw(context);
+    }
+  }
+});
+
 var Game = Class.create({
   initialize: function(canvas) {
     this.paused = true;
     this.timeout = 1000 / Game.frameRate;
     this.setCanvas(canvas);
     this.ship = new Ship(50, 50);
+    this.lasers = new LaserCollection();
     this.stars = [];
     for (var i = 0; i < 100; i++) this.stars.push(new Star());
+  },
+  
+  addNewLasers: function() {
+    if (this.shootLasers) {
+      this.lasers.add(new Laser(this.ship.x - 34, this.ship.y + 20, -30));
+      this.lasers.add(new Laser(this.ship.x + 33, this.ship.y + 20, -30));
+      this.shootLasers = false;
+    }
+  },
+  
+  animateLasers: function() {
+    this.lasers.animate();
   },
   
   animateStars: function() {
@@ -59,6 +107,10 @@ var Game = Class.create({
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   },
   
+  drawLasers: function() {
+    this.lasers.draw(this.context);
+  },
+  
   drawShip: function() {
     this.ship.draw(this.context);
   },
@@ -69,8 +121,11 @@ var Game = Class.create({
   
   main: function() {
     this.clearCanvas();
+    this.addNewLasers();
     this.animateStars();
+    this.animateLasers();
     this.drawStars();
+    this.drawLasers();
     this.drawShip();
     this.setTimeout();
   },
@@ -97,6 +152,7 @@ var Game = Class.create({
       padding: 0
     });
     this.canvas.observe('mousemove', this.onmousemove.bind(this));
+    this.canvas.observe('mousedown', this.onmousedown.bind(this));
     this.context = canvas.getContext('2d');
   },
   
@@ -111,10 +167,15 @@ var Game = Class.create({
   
   onmousemove: function(event) {
     this.ship.setPosition(Event.pointerX(event), Event.pointerY(event));
+  },
+  
+  onmousedown: function(event) {
+    this.shootLasers = true;
   }
 });
 
 Object.extend(Game, {
+  laserImage: image('/images/laser.png'),
   starImage: image('/images/star.png'),
   shipImage: image('/images/ship.png'),
   frameRate: 24
