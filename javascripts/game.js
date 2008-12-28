@@ -86,11 +86,11 @@ var Game = Class.create({
   },
   
   addNewLasers: function() {
-    if (this.shootLasers && this.releaseLasers) {
-      this.lasers.add(new Laser(this.ship.x - 34, this.ship.y + 20, -30));
-      this.lasers.add(new Laser(this.ship.x + 33, this.ship.y + 20, -30));
+    if (this.shootLasers && (this.laserFrameCount % 4 == 0)) {
+      this.lasers.add(new Laser(this.ship.x - 22, this.ship.y + 35, -35));
+      this.lasers.add(new Laser(this.ship.x + 22, this.ship.y + 35, -35));
     }
-    this.releaseLasers = !this.releaseLasers;
+    this.laserFrameCount++;
   },
   
   animateLasers: function() {
@@ -174,7 +174,7 @@ var Game = Class.create({
   
   onmousedown: function(event) {
     this.shootLasers = true;
-    this.releaseLasers = true;
+    this.laserFrameCount = 0;
   },
   
   onmouseup: function(event) {
