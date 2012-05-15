@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" version="-//W3C//DTD XHTML 1.1//EN" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+    <title>Stealth</title>
+    <style type="text/css" media="screen">
+    <!--
+      body {
+        background: #111;
+        color: silver;
+        cursor: none;
+        overflow: hidden;
+      }
+      #ship, #laser {
+        position: absolute;
+        left: -200px;
+        top: 0px;
+      }
+      #ship {
+        background: url(/images/ship.png);
+        width: 99px;
+        height: 71px;
+        z-index: 1;
+      }
+      #laser {
+        background: #f66;
+        width: 1px;
+        visibility: hidden;
+      }
+      .star {
+        background: url(/images/star.png) left top no-repeat;
+        position: absolute;
+        width: 5px;
+        height: 5px;
+      }
+    -->
+    </style>
+    <script src="/javascripts/prototype.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8">
+    <!--
+      function onMouseMove(event) {
+        var ship = $('ship');
+        var width = ship.getWidth();
+        var height = ship.getHeight();
+        var x = Event.pointerX(event);
+        var y = Event.pointerY(event);
+        ship.style.left = x - (width / 2) + 1 + 'px';
+        ship.style.top = y - (height / 2) + 1 + 'px';
+        
+        var laser = $('laser');
+        laser.style.left = x + 'px';
+        laser.style.height = y + 'px';
+      }
+      function onMouseDown(event) {
+        var laser = $('laser');
+        laser.style.visibility = 'visible';
+      }
+      function onMouseUp(event) {
+        var laser = $('laser');
+        laser.style.visibility = 'hidden';
+      }
+      Event.observe(window, 'mousemove', onMouseMove);
+      Event.observe(window, 'mousedown', onMouseDown);
+      Event.observe(window, 'mouseup', onMouseUp);
+    //-->
+    </script>
+  </head>
+  <body>
+    <div id="laser"></div>
+    <div id="ship"></div>
+    <script type="text/javascript" charset="utf-8">
+    <!--
+      var Star = Class.create();
+      Star.prototype = {
+        
+        initialize: function(x, y, velocity) {
+          this.element = Element.extend(document.createElement('DIV')).addClassName('star');
+          var body = Element.extend(document.getElementsByTagName('body').item(0));
+          body.appendChild(this.element);
+          
+          var edim = this.element.getDimensions();
+          var bdim = body.getDimensions();
+          if (x == null) x = Math.floor(Math.random() * (bdim.width - edim.width));
+          if (y == null) y = Math.floor(Math.random() * (1000 - edim.height));
+          this.setPosition(x, y);
+          
+          if (velocity == null) velocity = Math.floor(Math.random() * 10) + 1;
+          this.setVelocity(velocity);
+          Star.collection.push(this);
+        },
+        
+        setPosition: function(x, y) {
+          this.x = x;
+          this.y = y;
+          this.element.style.left = x + 'px';
+          this.element.style.top = y + 'px';
+        },
+        
+        setVelocity: function(velocity) {
+          var opacity = velocity;
+          if (opacity < 1) opacity = 1;
+          if (opacity > 10) opacity = 10;
+          this.element.style.filter = 'alpha(opacity=' + opacity + '0)';
+          if (opacity < 10) opacity = '.' + opacity;
+          this.element.style.opacity = opacity + '0';
+          this.velocity = velocity;
+        },
+        
+        animate: function() {
+          var y = this.y + this.velocity;
+          if (y > 1000) {
+            y = 0;
+          }
+          this.setPosition(this.x, y);
+        }
+      }
+      Star.animate_all = function() {
+        Star.collection.each(function(star) {
+          star.animate();
+        });
+      }
+      Star.collection = $A();
+      
+      Event.observe(window, 'load', function() {
+        for (i = 1; i <= 200; i++) { var star = new Star() }
+      });
+      
+      var tick = function() {
+        Star.animate_all();
+        setTimeout('tick()', 100);
+      };
+      tick();
+    //-->
+    </script>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" version="-//W3C//DTD XHTML 1.1//EN" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+    <title>Stealth</title>
+    <style type="text/css" media="screen">
+    <!--
+      body {
+        background: #111;
+        color: silver;
+        cursor: none;
+        overflow: hidden;
+      }
+      #ship, #laser {
+        position: absolute;
+        left: -200px;
+        top: 0px;
+      }
+      #ship {
+        background: url(/images/ship.png);
+        width: 99px;
+        height: 71px;
+      }
+      #laser {
+        background: #f66;
+        width: 1px;
+        visibility: hidden;
+      }
+    -->
+    </style>
+    <script src="/javascripts/prototype.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8">
+    <!--
+      function onMouseMove(event) {
+        var ship = $('ship');
+        var width = ship.getWidth();
+        var height = ship.getHeight();
+        var x = Event.pointerX(event);
+        var y = Event.pointerY(event);
+        ship.style.left = x - (width / 2) + 1 + 'px';
+        ship.style.top = y - (height / 2) + 1 + 'px';
+        
+        var laser = $('laser');
+        laser.style.left = x + 'px';
+        laser.style.height = y + 'px';
+      }
+      function onMouseDown(event) {
+        var laser = $('laser');
+        laser.style.visibility = 'visible';
+      }
+      function onMouseUp(event) {
+        var laser = $('laser');
+        laser.style.visibility = 'hidden';
+      }
+      Event.observe(window, 'mousemove', onMouseMove);
+      Event.observe(window, 'mousedown', onMouseDown);
+      Event.observe(window, 'mouseup', onMouseUp);
+    //-->
+    </script>
+  </head>
+  <body>
+    <div id="laser"></div>
+    <div id="ship"></div>
+  </body>
+</html>
